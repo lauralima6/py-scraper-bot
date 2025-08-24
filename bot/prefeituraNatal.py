@@ -51,7 +51,9 @@ class BotSelenium:
 
         with open(caminho_arquivo, "rb") as f:
             files = {"file": f}
-            headers = {"User-Agent": "Mozilla"} 
+            headers = {
+                "User-Agent": "curl/7.68.0"
+            }
 
             r = requests.post(url, files=files, headers=headers)
             r.raise_for_status()
@@ -68,12 +70,12 @@ class BotSelenium:
         self.session = requests.Session()
         self.urls_publicas = []
         self.arquivos = []
+        driver = None
         
         try:
             config = json.load(open(str(Path(__file__).parent.absolute()) + '\\config.json'))
-
             url = config['url_pesquisa']
-
+        
             driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
             driver.get(url)
 
@@ -144,6 +146,7 @@ class BotSelenium:
         except Exception as e:
             print("Erro:", e)
         finally:
-            driver.quit()
+            if driver: 
+                driver.quit()
 if __name__ == "__main__":
     bot = BotSelenium()
